@@ -1,4 +1,7 @@
+import binascii
 from enum import Enum, unique
+from ctypes import create_string_buffer
+import struct
 
 
 @unique
@@ -8,44 +11,82 @@ class FieldType(int, Enum):
 
     `_value_` is the type id
 
-    `size` is the type size (for static types, string sizes are
+    `size` is the type size (for static types, 0 for string sizes which are
     defined the DBISAM column info)
-
     """
 
     STRING = (1, 0)
-    BOOLEAN = (4, -1)
+    BOOLEAN = (4, 1)
     SHORT_INTEGER = (5, 2)
     INTEGER = (6, 4)
     FLOAT = (7, 8)
 
     TIMESTAMP = (11, -1)
 
-    CURRENCY = (5383, -1)
+    CURRENCY = (5383, 8)
 
-    def __new__(cls, index, size):
-        obj = int.__new__(cls, index)
-        obj._value_ = index
+    def __new__(cls, type_id, size):
+        obj = int.__new__(cls, type_id)
+        obj._value_ = type_id
         obj._size = size
         return obj
 
     def get_size(self, col_size):
         if self._size == -1:
-            raise TypeError(f"{self.__str__()} not supported.")
+            # raise TypeError(f"{self.__str__()} not supported.")
+            return 0
         elif self._size and col_size:
             raise TypeError("Both innate size and col_size were provided.")
         elif self._size and not col_size:
             return self._size
         elif self._size == 0 and col_size:
-            return col_size
+            # Add 2 for leading \x01 and trailing \x00
+            return col_size + 1
         else:
             raise TypeError("Neither innate size nor col_size were provided.")
 
 
 class Field:
-    def __init__(self, typeid, col_size):
+    """
+    Field stores the field structure and decodes data from row data
+
+    `type` is the FieldType
+
+    `size` is the number of bytes used to store the field
+
+    `index` is the index of the field within the row (from 0)
+
+    `row_offset` is the byte offset from the start of a row
+    """
+
+    def __init__(self, typeid, name, col_size, index):
         self.type = FieldType(typeid)
+        self.name = name
         self.size = self.type.get_size(col_size)
+        self.index = index
+        self.row_offset = 0
+
+    def __str__(self):
+        return self.type.__str__()
+
+    def decode_from_row(self, row_data):
+        field_data = row_data[self.row_offset : self.row_offset + self.size]
+
+        if self.type is FieldType.STRING:
+            return create_string_buffer(field_data).value.decode("utf-8")
+        elif self.type is FieldType.BOOLEAN:
+            return struct.unpack("<b", field_data)[0]
+        elif self.type is FieldType.SHORT_INTEGER:
+            return struct.unpack("<h", field_data)[0]
+        elif self.type is FieldType.INTEGER:
+            return struct.unpack("<i", field_data)[0]
+        elif self.type is FieldType.CURRENCY:
+            return struct.unpack("<d", field_data)[0]
+        else:
+            print(f"Decoding {self.type} unsupported.")
+            print(binascii.hexlify(field_data))
+
+            return "Unknown"
 
 
 if __name__ == "__main__":

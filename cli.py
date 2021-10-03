@@ -24,7 +24,8 @@ def main():
 
     with PyDBISAM(args.path) as db:
         if args.dump_csv:
-            exit("Not yet implemented.")
+            db.extract_rows()
+            exit()
 
         db.dump_structure()
 
