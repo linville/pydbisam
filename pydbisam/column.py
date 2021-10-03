@@ -69,7 +69,7 @@ def parse_column_info(self, offset):
     if size == 0:
         size = col_string_size
 
-    name = create_string_buffer(col_name_buf).value
+    name = create_string_buffer(col_name_buf).value.decode("utf-8")
 
     return {
         "index": col_index,
