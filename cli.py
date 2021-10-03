@@ -9,7 +9,14 @@ def main():
     parser.add_argument(
         "path", metavar="path-to-dat", type=str, help="Path to DBISAM table dat file."
     )
-    parser.add_argument(
+
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument(
+        "--dump-structure",
+        action="store_true",
+        help="Dump the table structure to stdout. Default behavior.",
+    )
+    group.add_argument(
         "--dump-csv", action="store_true", help="Export the table data as a CSV."
     )
 
