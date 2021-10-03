@@ -1,39 +1,7 @@
 from ctypes import create_string_buffer
-from enum import Enum, unique
 import struct
-import binascii
 
-
-@unique
-class Column(Enum):
-    STRING = 1
-    BOOLEAN = 4
-    SHORT_INTEGER = 5
-    INTEGER = 6
-    FLOAT = 7
-
-    TIMESTAMP = 11
-
-    CURRENCY = 5383
-
-    def field_size(self):
-        if self.name in ["SHORT_INTEGER"]:
-            return 2
-
-        if self.name in ["INTEGER"]:
-            return 4
-
-        if self.name in ["FLOAT"]:
-            return 8
-
-        if self.name in ["CURRENCY"]:
-            return 8
-
-        # Length of string is in column definition
-        if self.name in ["STRING"]:
-            return 0
-
-        raise ValueError(f"{self.name} size is unknown.")
+from .field import Field
 
 
 def parse_columns(self):
@@ -58,21 +26,19 @@ def parse_column_info(self, offset):
     # col_unknown = fields[1]
     col_name_buf = fields[2]
     col_type_id = fields[3]
-    col_string_size = fields[4]
+    col_size = fields[4]  # Only non-zero for strings
 
     if col_index != len(self.columns) + 1:
         return None
 
-    column = Column(col_type_id)
-    size = column.field_size()
-    if size == 0:
-        size = col_string_size
+    field = Field(col_type_id, col_size)
+    size = field.size
 
     name = create_string_buffer(col_name_buf).value.decode("utf-8")
 
     return {
         "index": col_index,
         "name": name,
-        "type": column,
+        "type": field,
         "size": size,
     }
