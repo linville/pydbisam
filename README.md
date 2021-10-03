@@ -21,7 +21,9 @@ Code Usage
 ----------
 The PyDBISAM class can be used for read-only access to the tables.
 ```python
-with PyDBISAM(args.path) as db:
+from pydbisam import PyDBISAM
+
+with PyDBISAM("path/to/file.dat") as db:
 	# TBD
 ```
 
