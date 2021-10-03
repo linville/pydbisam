@@ -3,7 +3,7 @@ import struct
 
 class PyDBISAM:
     from .column import parse_columns, parse_column_info
-    from .row import extract_row
+    from .row import extract_row, debug_extract_row
 
     column_info_offset = 0x200  # Offset of first column info
     column_info_size = 768  # Size of column info structure
@@ -66,12 +66,13 @@ class PyDBISAM:
         self.row_count = int(self.data_size / self.row_size)
 
     def compute_row_size(self):
-        size = 26 # Leading hash
+        size = 26  # Leading hash
         for col in self.columns:
             size += col.size + 1
 
         return size
 
     def extract_rows(self):
-        for row_index in range(self.row_size)[:11]:
+        for row_index in range(self.row_count):
             self.extract_row(row_index)
+            # self.debug_extract_row(row_index)
