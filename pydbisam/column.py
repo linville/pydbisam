@@ -37,7 +37,7 @@ class Column(Enum):
 
 
 def parse_columns(self):
-    offset = 0x200
+    offset = self.column_info_offset
 
     self.columns = []
 
@@ -48,7 +48,7 @@ def parse_columns(self):
 
         self.columns.append(column)
 
-        offset += 768
+        offset += self.column_info_size
 
 
 def parse_column_info(self, offset):
@@ -60,7 +60,6 @@ def parse_column_info(self, offset):
     col_type_id = fields[3]
     col_string_size = fields[4]
 
-    print(f"Parsing column {col_index} info")
     if col_index != len(self.columns) + 1:
         return None
 
