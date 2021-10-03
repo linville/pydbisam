@@ -28,7 +28,7 @@ class PyDBISAM:
     def __exit__(self, type, value, traceback):
         pass
 
-    def dump(self):
+    def dump_structure(self):
         print("Table Structure")
         print(f"  Total Length: {len(self.data)}")
         print(f"       Columns: {len(self.columns)}")
