@@ -21,7 +21,7 @@ class FieldType(int, Enum):
     INTEGER = (6, 4)
     FLOAT = (7, 8)
 
-    TIMESTAMP = (11, -1)
+    TIMESTAMP = (11, 8)
 
     CURRENCY = (5383, 8)
     AUTOINCREMET = (7430, 8)
@@ -88,10 +88,7 @@ class Field:
         elif self.type is FieldType.AUTOINCREMET:
             return struct.unpack("<i", field_data)[0]
         else:
-            print(f"Decoding {self.type} unsupported.")
-            print(binascii.hexlify(field_data))
-
-            return "Unknown"
+            return None
 
 
 if __name__ == "__main__":

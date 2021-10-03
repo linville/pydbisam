@@ -37,5 +37,5 @@ In a byte-packed row, all fields (except boolean) have a trailing byte `\x01` th
 | 5  | Short Int | 2 |           |
 | 6  | Int       | 4 |           |
 | 7  | Double    | 8 | IEEE-754  |
-| 11 | Timestamp | ? | Unknown   |
+| 11 | Timestamp | 8 | Unknown   |
 | 5383 | Currency | 8 | IEEE-754  |
