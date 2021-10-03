@@ -1,5 +1,6 @@
 import binascii
 from enum import Enum, unique
+import datetime
 from ctypes import create_string_buffer
 import struct
 
@@ -83,6 +84,14 @@ class Field:
             return struct.unpack("<i", field_data)[0]
         elif self.type is FieldType.FLOAT:
             return struct.unpack("<d", field_data)[0]
+        elif self.type is FieldType.TIMESTAMP:
+            milliseconds = struct.unpack("<d", field_data)[0]
+
+            ts = datetime.datetime(1, 1, 1)
+            ts += datetime.timedelta(milliseconds=milliseconds)
+            ts -= datetime.timedelta(days=1)
+
+            return ts
         elif self.type is FieldType.CURRENCY:
             return struct.unpack("<d", field_data)[0]
         elif self.type is FieldType.AUTOINCREMET:
