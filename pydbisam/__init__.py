@@ -1,3 +1,4 @@
+import datetime
 import struct
 
 
@@ -39,6 +40,8 @@ class PyDBISAM:
         print(f"    Column Info Offset: {self.column_info_offset}")
         print(f"           Data Offset: {self.data_offset}")
         print(f"             Data Size: {self.data_size}")
+        print()
+        print(f"         Last Modified: {self.last_updated}")
 
         for col in self.columns:
             print(
@@ -50,6 +53,11 @@ class PyDBISAM:
             )
 
     def __read_structure(self):
+        days = struct.unpack_from("<d", self.data, 0x9)[0]
+        self.last_updated = datetime.datetime(1970, 1, 1) + datetime.timedelta(
+            days=days
+        )
+
         self.row_size = struct.unpack_from("<H", self.data, 0x2D)[0]
 
         self.parse_columns()

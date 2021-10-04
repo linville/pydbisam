@@ -9,7 +9,8 @@ DBISAM File Format
 One table per file. The high-level file is structure is as follows:
 
 |  Offset  | Size (bytes) | Description |
-|  ------- | ---- | -------------       |
+|  ------: | ---- | ------------------- |
+|  `0x9`   | 8    | Last Updated (IEEE-754, days since the Unix epoch)
 |  `0x2D`  | 2    | Row size (bytes)    |
 |  `0x200` | 768  | First Column Name   |
 
@@ -18,7 +19,7 @@ DBISAM Column Definition
 ------------------------
 
 |  Offset  | Size (bytes) | Description   |
-|  ------- | ---- | --------------------- |
+|  ------: | ---- | --------------------- |
 |  `0x0`   | 2    | Index (Starts at 1)   |
 |  `0x2`   | 162? | Name                  |
 |  `0xA4`  | 1    | Type                  |
