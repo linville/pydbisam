@@ -44,6 +44,5 @@ def parse_column_info(self, offset):
     name = create_string_buffer(col_name_buf).value.decode("utf-8")
 
     field = Field(col_type_id, name, col_size, col_index)
-    size = field.size
 
     return field
