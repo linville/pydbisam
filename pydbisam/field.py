@@ -17,6 +17,7 @@ class FieldType(int, Enum):
     """
 
     STRING = (1, 0)
+    BLOB = (3, -1)
     BOOLEAN = (4, 1)
     SHORT_INTEGER = (5, 2)
     INTEGER = (6, 4)
@@ -76,6 +77,9 @@ class Field:
 
         if self.type is FieldType.STRING:
             return create_string_buffer(field_data).value.decode("utf-8")
+        if self.type is FieldType.BLOB:
+            # Value is likely an address within the separate blob file.
+            return None
         elif self.type is FieldType.BOOLEAN:
             return struct.unpack("<b", field_data)[0]
         elif self.type is FieldType.SHORT_INTEGER:

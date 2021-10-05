@@ -34,6 +34,7 @@ In a byte-packed row, all fields (except boolean) have a trailing byte `\x01` th
 | Id | Name      | Size<br>(bytes) | Description   |
 | -- | --------- | --- |----------------------- |
 | 1  | String    | Variable | Size defined in column definition at `0xA6` |
+| 3  | BLOB      | ? | Not supported. BLOBs are stored in a separate `.blb` file. The data in the `.dat` file is likely an address for the `.blb` file.  |
 | 4  | Boolean   | 1 | Missing the trailing `\x01` marker |
 | 5  | Short Int | 2 |           |
 | 6  | Int       | 4 |           |
