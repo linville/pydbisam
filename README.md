@@ -24,11 +24,12 @@ The PyDBISAM class can be used for read-only access to the tables.
 from pydbisam import PyDBISAM
 
 with PyDBISAM("path/to/file.dat") as db:
-	# TBD
+    db.extract_rows()
 ```
 
 
-# Similar Projects
+Similar Projects
+----------------
 
 - [DBISAM-to-JSON](https://github.com/KrijnL/DBISAM-to-JSON)
   - Python 2/3 script to convert DBISAM to JSON (limited support for various column types).
