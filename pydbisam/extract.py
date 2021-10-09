@@ -26,7 +26,7 @@ def _read_file_header(self):
     ):
         raise RuntimeError(
             f"Header + Data != File Size mismatch.\n"
-            f"{FIELD_INFO_OFFSET} + {field_info_subheader_size} + {self._data_size} "
+            f"{self._FIELD_INFO_OFFSET} + {field_info_subheader_size} + {self._data_size} "
             f"!= {len(self._data)}"
         )
 
