@@ -17,6 +17,7 @@ class FieldType(int, Enum):
     """
 
     STRING = (1, 0)
+    # DATE = (2, ?)
     BLOB = (3, -1)
     BOOLEAN = (4, 1)
     SHORT_INTEGER = (5, 2)
@@ -53,42 +54,65 @@ class Field:
     """
     Field stores the field structure and decodes data from row data
 
-    `type` is the FieldType
+    `_type` is the FieldType
 
-    `size` is the number of bytes used to store the field
+    `_name` is the string name of the field
 
-    `index` is the index of the field within the row (from 0)
+    `_index` is the index of the field within the row (from 0)
 
-    `row_offset` is the byte offset from the start of a row
+    `_size` is the number of bytes used to store the field
+
+    `_row_offset` is the byte offset from the start of a row
     """
 
-    def __init__(self, typeid, name, col_size, index):
-        self.type = FieldType(typeid)
-        self.name = name
-        self.size = self.type.get_size(col_size)
-        self.index = index
-        self.row_offset = 0
+    def __init__(self, typeid, name, index, col_size, col_offset):
+        self._type = FieldType(typeid)
+        self._name = name
+        self._index = index
+        self._size = self._type.get_size(col_size)
+        self._row_offset = col_offset
 
     def __str__(self):
-        return self.type.__str__()
+        return self._type.__str__()
+
+    @property
+    def type(self):
+        return self._type
+
+    @property
+    def name(self):
+        return self._name
+
+    @property
+    def size(self):
+        return self._size
+
+    @property
+    def index(self):
+        return self._index
+
+    @property
+    def row_offset(self):
+        return self._row_offset
 
     def decode_from_row(self, row_data):
         field_data = row_data[self.row_offset : self.row_offset + self.size]
 
-        if self.type is FieldType.STRING:
-            return create_string_buffer(field_data).value.decode("utf-8")
-        if self.type is FieldType.BLOB:
+        if self._type is FieldType.STRING:
+            # return create_string_buffer(data).value.decode("utf-8")
+            return bytearray(field_data).decode("utf-8").rstrip("\x00")
+        if self._type is FieldType.BLOB:
             # Value is likely an address within the separate blob file.
             return None
-        elif self.type is FieldType.BOOLEAN:
+        elif self._type is FieldType.BOOLEAN:
             return struct.unpack("<b", field_data)[0]
-        elif self.type is FieldType.SHORT_INTEGER:
+        elif self._type is FieldType.SHORT_INTEGER:
             return struct.unpack("<h", field_data)[0]
-        elif self.type is FieldType.INTEGER:
+        elif self._type is FieldType.INTEGER:
             return struct.unpack("<i", field_data)[0]
-        elif self.type is FieldType.FLOAT:
+        elif self._type is FieldType.FLOAT:
             return struct.unpack("<d", field_data)[0]
-        elif self.type is FieldType.TIMESTAMP:
+        elif self._type is FieldType.TIMESTAMP:
             milliseconds = struct.unpack("<d", field_data)[0]
 
             ts = datetime.datetime(1, 1, 1)
@@ -96,12 +120,12 @@ class Field:
             ts -= datetime.timedelta(days=1)
 
             return ts
-        elif self.type is FieldType.CURRENCY:
+        elif self._type is FieldType.CURRENCY:
             return struct.unpack("<d", field_data)[0]
-        elif self.type is FieldType.AUTOINCREMET:
+        elif self._type is FieldType.AUTOINCREMET:
             return struct.unpack("<i", field_data)[0]
         else:
-            return None
+            return "Fail"
 
 
 if __name__ == "__main__":
@@ -110,5 +134,5 @@ if __name__ == "__main__":
     print(FieldType(6)._size)
 
     print("Test out Field class")
-    x = Field(1, 30)
+    x = Field(1, "Test", 8, 1)
     print(x)

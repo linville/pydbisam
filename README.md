@@ -24,7 +24,9 @@ The PyDBISAM class can be used for read-only access to the tables.
 from pydbisam import PyDBISAM
 
 with PyDBISAM("path/to/file.dat") as db:
-    db.extract_rows()
+	print(", ".join(db.fields()))
+	for row in db.rows():
+		print(", ".join(map(str, row)))
 ```
 
 

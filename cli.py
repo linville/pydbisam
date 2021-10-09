@@ -24,7 +24,9 @@ def main():
 
     with PyDBISAM(args.path) as db:
         if args.dump_csv:
-            db.extract_rows()
+            print(", ".join(db.fields()))
+            for row in db.rows():
+                print(", ".join(map(str, row)))
             exit()
 
         db.dump_structure()

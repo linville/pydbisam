@@ -1,28 +1,45 @@
+import binascii
 import datetime
 import struct
 
+from .field import Field
 
-class PyDBISAM:
-    from .column import parse_columns, parse_column_info
-    from .row import extract_row, debug_extract_row
 
-    column_info_offset = 0x200  # Offset of first column info
-    column_info_size = 768  # Size of column info structure
+class PyDBISAM(object):
+    from .extract import (
+        row,
+        _read_file_header,
+        _read_field_subheader,
+        _read_field_definition,
+    )
+
+    _FIELD_INFO_OFFSET = 0x200  # Offset of first field info definition
+    _FIELD_INFO_SIZE = 768  # Size of a single field info
 
     def __init__(self, path=None, data: bytes = None):
+        self._path = None
+        self._data_bytes = None
+        self._data = None
+        self._md5_checksum = None
+        self._last_updated = None
+        self._total_fields = 0
+        self._row_size = 0
+        self._total_rows = 0
+
         if path:
-            print(f"Path provided: {path}")
-
             file = open(path, mode="rb")
-            self.data = file.read()
+            self._path = path
+            self._data_bytes = file.read()
         elif data:
-            print("Data provided")
-
-            self.data = data
+            self._path = "In memory"
+            self._data_bytes = data
         else:
-            raise ()
+            return
 
-        self.__read_structure()
+        self._data = memoryview(self._data_bytes)
+
+        self._read_file_header()
+        self._read_field_subheader()
 
     def __enter__(self):
         return self
@@ -30,20 +47,46 @@ class PyDBISAM:
     def __exit__(self, type, value, traceback):
         pass
 
-    def dump_structure(self):
-        print("Table Structure")
-        print(f"  Total Length: {len(self.data)}")
-        print(f"       Columns: {len(self.columns)}")
-        print(f"      Row Size: {self.row_size} (Computed: {self.compute_row_size()})")
-        print(f"    Rows Count: {self.row_count}")
-        print()
-        print(f"    Column Info Offset: {self.column_info_offset}")
-        print(f"           Data Offset: {self.data_offset}")
-        print(f"             Data Size: {self.data_size}")
-        print()
-        print(f"         Last Modified: {self.last_updated}")
+    @property
+    def md5_checksum(self):
+        return self._md5_checksum
 
-        for col in self.columns:
+    @property
+    def md5_checksum_str(self):
+        return binascii.hexlify(self._md5_checksum).decode().upper()
+
+    @property
+    def last_updated(self):
+        return self._last_updated
+
+    @property
+    def total_fields(self):
+        return self._total_fields
+
+    @property
+    def total_rows(self):
+        return self._total_rows
+
+    @property
+    def row_size(self):
+        return self._row_size
+
+    def dump_structure(self):
+        print(f"Table: {self._path}")
+        print(f"  MD5 Checksum: 0x{self.md5_checksum_str}")
+        print(f"  Last Updated: {self.last_updated}")
+        print(f"  Total Fields: {self.total_fields}")
+        print(f"      Row Size: {self.row_size}")
+        print(f"    Total Rows: {self.total_rows}")
+        print()
+        print(f"  Column Info Offset: {self._FIELD_INFO_OFFSET}")
+        print(f"         Data Offset: {self._data_offset}")
+        print(f"           Data Size: {self._data_size}")
+        print(f"         File Length: {len(self._data)}")
+        print()
+
+        print("Index, Name, Typ, Size, Row Offset")
+        for col in self._columns:
             print(
                 f"{col.index}, "
                 f"{col.name}, "
@@ -52,35 +95,9 @@ class PyDBISAM:
                 f"{col.row_offset} "
             )
 
-    def __read_structure(self):
-        days = struct.unpack_from("<d", self.data, 0x9)[0]
-        self.last_updated = datetime.datetime(1970, 1, 1) + datetime.timedelta(
-            days=days
-        )
+    def fields(self):
+        return [x.name for x in self._columns]
 
-        self.row_size = struct.unpack_from("<H", self.data, 0x2D)[0]
-
-        self.parse_columns()
-
-        self.data_offset = (
-            self.column_info_offset + len(self.columns) * self.column_info_size
-        )
-        self.data_size = len(self.data) - self.data_offset
-
-        if self.data_size % self.row_size:
-            print("Row size doesn't evenly divide data size.")
-            print(f"  data_size / row_size = {self.data_size / self.row_size}")
-
-        self.row_count = int(self.data_size / self.row_size)
-
-    def compute_row_size(self):
-        size = 26  # Leading hash
-        for col in self.columns:
-            size += col.size + 1
-
-        return size
-
-    def extract_rows(self):
-        for row_index in range(self.row_count):
-            self.extract_row(row_index)
-            # self.debug_extract_row(row_index)
+    def rows(self):
+        for index in range(self._total_rows):
+            yield self.row(index)
