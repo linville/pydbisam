@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="pydbisam",
-    version="0.1.0",
+    version="1.0.0",
     description="Read DBISAM database tables.",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -17,10 +17,11 @@ setup(
     packages=["pydbisam"],
     py_modules=["cli"],
     classifiers=[
-        "Development Status :: 3 - Alpha",
-        "Operating System :: OS Independent",
+        "Development Status :: 5 - Production/Stable",
+        "Environment :: Console",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: ISC License (ISCL)",
+        "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
         "Topic :: Database",
         "Topic :: Utilities",
