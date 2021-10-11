@@ -95,12 +95,13 @@ class Field:
     def row_offset(self):
         return self._row_offset
 
-    def decode_from_row(self, row_data):
+    def decode_from_row(self, row_data):  # noqa: C901
         field_data = row_data[self.row_offset : self.row_offset + self.size]
 
         if self._type is FieldType.STRING:
-            # return create_string_buffer(data).value.decode("utf-8")
-            return bytearray(field_data).decode("utf-8").rstrip("\x00")
+            return (
+                bytearray(field_data).decode("cp1252", errors="replace").rstrip("\x00")
+            )
         if self._type is FieldType.BLOB:
             # Value is likely an address within the separate blob file.
             return None

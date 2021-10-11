@@ -1,6 +1,7 @@
 ## Unreleased
 ### Changed
 - Fixed issue with empty DateTime's throwing a `OverflowError: date value out of range` exception.
+- Decode strings fields using cp1252 rather than UTF-8. As part of this, if an unknown character is found it will be replaced with `\ufffd` rather than throwing an exception.
 
 ## [1.0.0] - 2021-09-08
 ### Added
