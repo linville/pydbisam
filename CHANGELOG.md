@@ -1,4 +1,4 @@
-## Unreleased
+## [1.0.1] - 2021-09-11
 ### Changed
 - Fixed issue with empty DateTime's throwing a `OverflowError: date value out of range` exception.
 - Decode strings fields using cp1252 rather than UTF-8. As part of this, if an unknown character is found it will be replaced with `\ufffd` rather than throwing an exception.
@@ -16,6 +16,7 @@
 ## [0.1.0] - 2021-09-06
 - Initial alpha release.
 
-[Unreleased]: https://github.com/linville/pydbisam/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/linville/pydbisam/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/linville/pydbisam/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/linville/pydbisam/compare/v0.1.0...v1.0.0
 [0.1.0]: https://github.com/linville/pydbisam/releases/tag/v0.1.0
