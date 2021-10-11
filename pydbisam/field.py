@@ -115,6 +115,12 @@ class Field:
         elif self._type is FieldType.TIMESTAMP:
             milliseconds = struct.unpack("<d", field_data)[0]
 
+            # Out of the box we don't support anything before AD 1.
+            # Possibly we could use Astropy, but anybody using datetimes
+            # of that scale probably aren't using DBISAM's DateTime field.
+            if milliseconds < 24 * 60 * 60 * 1000:
+                return None
+
             ts = datetime.datetime(1, 1, 1)
             ts += datetime.timedelta(milliseconds=milliseconds)
             ts -= datetime.timedelta(days=1)
