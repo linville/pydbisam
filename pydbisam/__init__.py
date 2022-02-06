@@ -100,5 +100,7 @@ class PyDBISAM(object):
         return [x.name for x in self._columns]
 
     def rows(self):
-        for index in range(self._total_rows):
-            yield self.row(index)
+        for index in range(self._total_rows + self._deleted_rows):
+            row_values = self.row(index)
+            if row_values is not None:
+                yield row_values

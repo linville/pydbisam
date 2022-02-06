@@ -103,15 +103,34 @@ def _read_field_definition(self, data):
     return field
 
 
-def row(self, index):
+def row(self, index, extract_deleted=False):
     if index < 0:
         raise RuntimeError(f"Negative index: {index}")
-    elif index >= self.total_rows:
+    elif index >= self.total_rows + self._deleted_rows:
         raise RuntimeError(
             f"Index {index} outside of bounds. Total rows: {self.total_rows}"
         )
 
     row_offset = self._data_offset + (index * self._row_size)
+    row_header_data = self._data[row_offset : row_offset + self._columns[0].row_offset]
     row_data = self._data[row_offset : row_offset + self._row_size]
+
+    row_deleted = struct.unpack_from("<B", row_header_data, 0x0)[0]
+
+    # Not sure the exact behavior of these indexes
+    row_idx_a = struct.unpack_from("<B", row_header_data, 0x1)[0]
+    row_idx_b = struct.unpack_from("<B", row_header_data, 0x5)[0]
+    row_checksum = row_header_data[0x9 : 0x9 + 16]
+
+    if row_deleted and not extract_deleted:
+        return None
+
+    # Debugging output for the row header
+    # return [
+    #     f"{index:03}",
+    #     binascii.hexlify(row_header_data).decode().upper(),
+    #     row_idx_a,
+    #     row_idx_b,
+    # ]
 
     return [field.decode_from_row(row_data) for field in self._columns]
