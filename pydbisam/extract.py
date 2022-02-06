@@ -21,26 +21,34 @@ def _read_file_header(self):
 
     # Size of just the non-deleted records
     self._calc_row_area_size = self.total_rows * self.row_size
-    
+
     # Size of all the records, including deleted ones.
     self._row_area_size = len(self._data) - self._data_offset
 
-    self._deleted_rows = (int) (self._row_area_size - self._calc_row_area_size) // self._row_size
-    
+    # Calculate deleted rows
+    self._deleted_rows = (
+        self._row_area_size - self._calc_row_area_size
+    ) / self._row_size
+
     # If the difference between the calculated row area and the measured row area
     # is not evenly divisible by the row size, there is likely an issue.
-    if (self._row_area_size - self._calc_row_area_size) % self._row_size:
+    if not self._deleted_rows.is_integer():
         raise IOError(
-            "Calculate space for deleted rows is not evenly divisible by the row size.\n"
+            "Calculated space for deleted rows is not evenly divisible by the row size.\n"
             f"  Row Size      = {self._row_size}\n"
             f"  Meas Row Area = {self._row_area_size}\n"
             f"  Calc Row Area = {self._calc_row_area_size}\n"
             f"  Diff          = {self._row_area_size - self._calc_row_area_size}\n"
         )
 
-    calc_file_size = self._FIELD_INFO_OFFSET + field_info_subheader_size + self._calc_row_area_size
+    # Force to int type so it prints nice later
+    self._deleted_rows = int(self._deleted_rows)
+
+    calc_file_size = (
+        self._FIELD_INFO_OFFSET + field_info_subheader_size + self._calc_row_area_size
+    )
     meas_file_size = len(self._data)
-    
+
     # The calculated file size should always be less than or equal
     # to the measured file size (to account for deleted records).
     if calc_file_size > meas_file_size:
