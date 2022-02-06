@@ -55,7 +55,8 @@ def _read_file_header(self):
         raise IOError(
             "The actual file size is less than expected. "
             "It should be equal to or greater than calculated size.\n"
-            f"Calculated = {calc_size} = {self._FIELD_INFO_OFFSET} + {field_info_subheader_size} + {self._calc_row_area_size}\n"
+            f"Calculated = {calc_file_size} = "
+            f"{self._FIELD_INFO_OFFSET} + {field_info_subheader_size} + {self._calc_row_area_size}\n"
             f"Actual     = {meas_file_size}\n"
             f"Diff       = {meas_file_size - calc_file_size}"
         )
@@ -118,9 +119,9 @@ def row(self, index, extract_deleted=False):
     row_deleted = struct.unpack_from("<B", row_header_data, 0x0)[0]
 
     # Not sure the exact behavior of these indexes
-    row_idx_a = struct.unpack_from("<B", row_header_data, 0x1)[0]
-    row_idx_b = struct.unpack_from("<B", row_header_data, 0x5)[0]
-    row_checksum = row_header_data[0x9 : 0x9 + 16]
+    # row_idx_a = struct.unpack_from("<B", row_header_data, 0x1)[0]
+    # row_idx_b = struct.unpack_from("<B", row_header_data, 0x5)[0]
+    # row_checksum = row_header_data[0x9 : 0x9 + 16]
 
     if row_deleted and not extract_deleted:
         return None
