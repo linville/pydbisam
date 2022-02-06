@@ -27,9 +27,9 @@ class PyDBISAM(object):
         self._total_rows = 0
 
         if path:
-            file = open(path, mode="rb")
-            self._path = path
-            self._data_bytes = file.read()
+            with open(path, mode="rb") as file:
+                self._path = path
+                self._data_bytes = file.read()
         elif data:
             self._path = "In memory"
             self._data_bytes = data
