@@ -1,4 +1,4 @@
-## [Unreleased]
+## [1.0.2] - 2022-02-06
 ### Changed
 - Fixed handling of deleted rows. Closes #1.
 - Fixed a `ResourceWarning: unclosed file`, close the DB file after reading it into memory.
@@ -21,7 +21,8 @@
 ## [0.1.0] - 2021-09-06
 - Initial alpha release.
 
-[Unreleased]: https://github.com/linville/pydbisam/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/linville/pydbisam/compare/v1.0.2...HEAD
+[1.0.2]: https://github.com/linville/pydbisam/compare/v1.0.0...v1.0.2
 [1.0.1]: https://github.com/linville/pydbisam/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/linville/pydbisam/compare/v0.1.0...v1.0.0
 [0.1.0]: https://github.com/linville/pydbisam/releases/tag/v0.1.0
