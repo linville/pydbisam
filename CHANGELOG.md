@@ -1,5 +1,6 @@
 ## [Unreleased]
 ### Changed
+- Fixed handling of deleted rows. Closes #1.
 - Fixed a `ResourceWarning: unclosed file`, close the DB file after reading it into memory.
 
 ## [1.0.1] - 2021-09-11
