@@ -18,16 +18,38 @@ def _read_file_header(self):
     field_info_subheader_size = self._total_fields * self._FIELD_INFO_SIZE
 
     self._data_offset = self._FIELD_INFO_OFFSET + field_info_subheader_size
-    self._data_size = self.total_rows * self.row_size
 
-    # Sanity check that sections add up to file length
-    if self._FIELD_INFO_OFFSET + field_info_subheader_size + self._data_size != len(
-        self._data
-    ):
-        raise RuntimeError(
-            f"Header + Data != File Size mismatch.\n"
-            f"{self._FIELD_INFO_OFFSET} + {field_info_subheader_size} + {self._data_size} "
-            f"!= {len(self._data)}"
+    # Size of just the non-deleted records
+    self._calc_row_area_size = self.total_rows * self.row_size
+    
+    # Size of all the records, including deleted ones.
+    self._row_area_size = len(self._data) - self._data_offset
+
+    self._deleted_rows = (int) (self._row_area_size - self._calc_row_area_size) // self._row_size
+    
+    # If the difference between the calculated row area and the measured row area
+    # is not evenly divisible by the row size, there is likely an issue.
+    if (self._row_area_size - self._calc_row_area_size) % self._row_size:
+        raise IOError(
+            "Calculate space for deleted rows is not evenly divisible by the row size.\n"
+            f"  Row Size      = {self._row_size}\n"
+            f"  Meas Row Area = {self._row_area_size}\n"
+            f"  Calc Row Area = {self._calc_row_area_size}\n"
+            f"  Diff          = {self._row_area_size - self._calc_row_area_size}\n"
+        )
+
+    calc_file_size = self._FIELD_INFO_OFFSET + field_info_subheader_size + self._calc_row_area_size
+    meas_file_size = len(self._data)
+    
+    # The calculated file size should always be less than or equal
+    # to the measured file size (to account for deleted records).
+    if calc_file_size > meas_file_size:
+        raise IOError(
+            "The actual file size is less than expected. "
+            "It should be equal to or greater than calculated size.\n"
+            f"Calculated = {calc_size} = {self._FIELD_INFO_OFFSET} + {field_info_subheader_size} + {self._calc_row_area_size}\n"
+            f"Actual     = {meas_file_size}\n"
+            f"Diff       = {meas_file_size - calc_file_size}"
         )
 
 

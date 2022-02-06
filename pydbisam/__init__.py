@@ -78,10 +78,11 @@ class PyDBISAM(object):
         print(f"  Total Fields: {self.total_fields}")
         print(f"      Row Size: {self.row_size}")
         print(f"    Total Rows: {self.total_rows}")
+        print(f"  Deleted Rows: {self._deleted_rows}")
         print()
         print(f"  Column Info Offset: {self._FIELD_INFO_OFFSET}")
         print(f"         Data Offset: {self._data_offset}")
-        print(f"           Data Size: {self._data_size}")
+        print(f"  Calc Row Area Size: {self._calc_row_area_size}")
         print(f"         File Length: {len(self._data)}")
         print()
 
