@@ -98,6 +98,19 @@ class Field:
     def decode_from_row(self, row_data):  # noqa: C901
         field_data = row_data[self.row_offset : self.row_offset + self.size]
 
+        # Bool doesn't have a field marking that its empty.
+        if self._type is FieldType.BOOLEAN:
+            if struct.unpack("<b", field_data)[0]:
+                return True
+            else:
+                return False
+
+        # All other fields include a proceeding byte that will be non-zero
+        # if the field has a value and zero if it doesn't.
+        is_none_data = row_data[self.row_offset - 1 : self.row_offset]
+        if not struct.unpack("<b", is_none_data):
+            return None
+
         if self._type is FieldType.STRING:
             return (
                 bytearray(field_data).decode("cp1252", errors="replace").rstrip("\x00")
@@ -105,8 +118,6 @@ class Field:
         if self._type is FieldType.BLOB:
             # Value is likely an address within the separate blob file.
             return None
-        elif self._type is FieldType.BOOLEAN:
-            return struct.unpack("<b", field_data)[0]
         elif self._type is FieldType.SHORT_INTEGER:
             return struct.unpack("<h", field_data)[0]
         elif self._type is FieldType.INTEGER:
