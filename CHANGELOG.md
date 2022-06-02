@@ -1,3 +1,8 @@
+## [Unreleased]
+### Added
+- DATE field support (unverified). Closes #3.
+- Acknowledge empty field byte, stop decoding and return `None`.
+
 ## [1.0.2] - 2022-02-06
 ### Changed
 - Fixed handling of deleted rows. Closes #1.
