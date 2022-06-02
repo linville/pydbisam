@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="pydbisam",
-    version="1.0.2",
+    version="1.1.0",
     description="Read DBISAM database tables.",
     long_description=long_description,
     long_description_content_type="text/markdown",

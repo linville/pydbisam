@@ -1,4 +1,4 @@
-## [Unreleased]
+## [1.1.0] - 2022-06-01
 ### Added
 - DATE field support (unverified). Closes #3.
 - Acknowledge empty field byte, stop decoding and return `None`.
@@ -26,8 +26,9 @@
 ## [0.1.0] - 2021-09-06
 - Initial alpha release.
 
-[Unreleased]: https://github.com/linville/pydbisam/compare/v1.0.2...HEAD
-[1.0.2]: https://github.com/linville/pydbisam/compare/v1.0.0...v1.0.2
+[Unreleased]: https://github.com/linville/pydbisam/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/linville/pydbisam/compare/v1.0.2...v1.1.0
+[1.0.2]: https://github.com/linville/pydbisam/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/linville/pydbisam/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/linville/pydbisam/compare/v0.1.0...v1.0.0
 [0.1.0]: https://github.com/linville/pydbisam/releases/tag/v0.1.0

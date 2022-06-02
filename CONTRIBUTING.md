@@ -12,8 +12,10 @@ Release Procedure
 1. Bump version numbers in:
    - `setup.md`
    - `CHANGELOG.md`
-2. Commit new version strings
+2. On main branch, commit new version strings and push it up
+   - `git checkout main`
    - `git commit -m "Releasing vX.Y.Z"`
+   - `git push`
 2. Tag commit
    - Optionally, tag with `git tag test-vX.Y.Z` for uploading to test instance of PyPi.
    - `git tag vX.Y.Z`
