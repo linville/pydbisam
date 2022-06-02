@@ -17,7 +17,7 @@ class FieldType(int, Enum):
     """
 
     STRING = (1, 0)
-    # DATE = (2, ?)
+    DATE = (2, 4)
     BLOB = (3, -1)
     BOOLEAN = (4, 1)
     SHORT_INTEGER = (5, 2)
@@ -118,6 +118,12 @@ class Field:
         if self._type is FieldType.BLOB:
             # Value is likely an address within the separate blob file.
             return None
+        elif self._type is FieldType.DATE:
+            days = struct.unpack("<i", field_data)[0]
+            if days == 0:
+                return None
+
+            return datetime.date(1, 1, 1) + datetime.timedelta(days - 1)
         elif self._type is FieldType.SHORT_INTEGER:
             return struct.unpack("<h", field_data)[0]
         elif self._type is FieldType.INTEGER:

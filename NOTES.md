@@ -36,6 +36,7 @@ Datatypes
 | Id | Name      | Size<br>(bytes) | Description   |
 | -- | --------- | --- |----------------------- |
 | 1  | String    | Variable | Size defined in column definition at `0xA6` |
+| 2  | Date      | 4 | Days -1 since [AD 1, Jan 0](https://en.wikipedia.org/wiki/List_of_non-standard_dates#January_0) (Unverified) |
 | 3  | BLOB      | ? | Not yet supported. BLOBs are stored in a separate `.blb` file. The data in the `.dat` file is likely an address for the `.blb` file.  |
 | 4  | Boolean   | 1 | Missing the trailing `\x01` marker |
 | 5  | Short Int | 2 |           |
