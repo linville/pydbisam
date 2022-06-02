@@ -10,7 +10,7 @@ One table per file. The first 512 bytes are the file header.
 
 |  Offset  | Size<br>(bytes) | Description |
 |  ------: | ---- | -------------------- |
-|  `0x9`   | 16   | MD5 Signature        |
+|  `0x9`   | 16   | File Signature?      |
 |  `0x29`  | 4    | Total rows           |
 |  `0x2D`  | 2    | Row size (bytes)     |
 |  `0x2F`  | 2    | Total fields         |
