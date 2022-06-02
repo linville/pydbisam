@@ -158,5 +158,5 @@ if __name__ == "__main__":
     print(FieldType(6)._size)
 
     print("Test out Field class")
-    x = Field(1, "Test", 8, 1)
+    x = Field(1, "Test", 8, 1, 0)
     print(x)
