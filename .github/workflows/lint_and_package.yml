@@ -18,7 +18,7 @@ jobs:
 
     - name: Install CI Utilities
       run: |
-        python install pip-tools
+        pip install pip-tools
         pip-compile --extra dev -o - pyproject.toml | pip install -r /dev/stdin -U
 
     - name: Lint
