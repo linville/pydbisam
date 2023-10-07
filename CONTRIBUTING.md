@@ -10,7 +10,7 @@ Release Procedure
 
 0. [Verify CI](https://github.com/linville/pydbisam/actions) is passing.
 1. Bump version numbers in:
-   - `setup.md`
+   - `pyproject.toml`
    - `CHANGELOG.md`
 2. On main branch, commit new version strings and push it up
    - `git checkout main`
