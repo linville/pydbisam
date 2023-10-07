@@ -50,3 +50,7 @@ exclude = '''
   | dist
 )/
 '''
+
+[tool.ruff]
+target-version = "py311"
+ignore = ["E501"]

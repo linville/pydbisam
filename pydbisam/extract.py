@@ -1,4 +1,3 @@
-import binascii
 from ctypes import create_string_buffer
 import datetime
 import struct

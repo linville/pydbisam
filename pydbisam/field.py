@@ -1,7 +1,5 @@
-import binascii
 from enum import Enum, unique
 import datetime
-from ctypes import create_string_buffer
 import struct
 
 

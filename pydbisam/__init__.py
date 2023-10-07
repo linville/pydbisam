@@ -1,8 +1,4 @@
 import binascii
-import datetime
-import struct
-
-from .field import Field
 
 
 class PyDBISAM(object):
