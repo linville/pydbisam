@@ -1,4 +1,46 @@
+[project]
+name = "pydbisam"
+version = "1.1.0"
+description = "Read DBISAM database tables."
+readme = "README.md"
+requires-python = ">=3.7"
+license = {file = "LICENSE"}
+authors = [
+  {name = "Aaron Linville", email = "aaron@linville.org"},
+]
+
+keywords = ["dbisam"]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: ISC License (ISCL)",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Topic :: Database",
+  "Topic :: Utilities",
+]
+
+[project.optional-dependencies]
+dev = [
+  "black==23.9.*",
+  "build==1.0.*",
+  "ruff",
+  "twine==4.0.*",
+]
+
+[project.urls]
+Homepage = "https://github.com/linville/pydbisam/"
+
+[build-system]
+requires = ["setuptools>=65.0"]
+build-backend = "setuptools.build_meta"
+
+[project.scripts]
+pydbisam = "pydbisam.cli:main"
+
 [tool.black]
+line-length = 88
 exclude = '''
 /(
     \.eggs
