@@ -1,3 +1,10 @@
+## [Unreleased]
+### Added
+- Added decoding of description, user version and last updated.
+
+### Changed
+- #4 Added support for autoincrement fields (which when encountered caused an error)
+
 ## [1.1.0] - 2022-06-01
 ### Added
 - DATE field support (unverified). Closes #3.

@@ -1,5 +1,6 @@
 import binascii
 from ctypes import create_string_buffer
+import datetime
 import struct
 
 from .field import Field
@@ -12,8 +13,22 @@ def _read_file_header(self):
     self._row_size = struct.unpack_from("<H", self._data, 0x2D)[0]
     self._total_fields = struct.unpack_from("<H", self._data, 0x2F)[0]
 
-    # something = struct.unpack_from("<d", self._data, 0x41)[0]
-    self._last_updated = None
+    days = struct.unpack_from("<d", self._data, 0x3F)[0]
+
+    # Unsure the significance of this date, but this is what works...
+    epoch = datetime.datetime(3798, 12, 28)
+    self._last_updated = epoch + datetime.timedelta(days=days)
+
+    desc_length = struct.unpack_from("<B", self._data, 0x47)[0]
+    if desc_length > 0:
+        desc_data = bytearray(self._data[0x48 : 0x48 + desc_length])
+        self._description = desc_data.decode("cp1252", errors="replace").rstrip("\x00")
+    else:
+        self._description = None
+
+    u_major = struct.unpack_from("<H", self._data, 0xC1)[0]
+    u_minor = struct.unpack_from("<B", self._data, 0xC3)[0]
+    self._user_version = f"{u_major}.{u_minor}"
 
     field_info_subheader_size = self._total_fields * self._FIELD_INFO_SIZE
 

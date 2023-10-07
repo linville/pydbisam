@@ -25,6 +25,8 @@ class PyDBISAM(object):
         self._total_fields = 0
         self._row_size = 0
         self._total_rows = 0
+        self._description = None
+        self._user_version = None
 
         if path:
             with open(path, mode="rb") as file:
@@ -71,6 +73,14 @@ class PyDBISAM(object):
     def row_size(self):
         return self._row_size
 
+    @property
+    def description(self):
+        return self._description
+
+    @property
+    def user_version(self):
+        return self._user_version
+
     def dump_structure(self):
         print(f"Table: {self._path}")
         print(f"  MD5 Checksum: 0x{self.md5_checksum_str}")
@@ -79,6 +89,8 @@ class PyDBISAM(object):
         print(f"      Row Size: {self.row_size}")
         print(f"    Total Rows: {self.total_rows}")
         print(f"  Deleted Rows: {self._deleted_rows}")
+        print(f"   Description: {self._description}")
+        print(f"  User Version: {self._user_version}")
         print()
         print(f"  Column Info Offset: {self._FIELD_INFO_OFFSET}")
         print(f"         Data Offset: {self._data_offset}")

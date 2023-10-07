@@ -10,13 +10,19 @@ One table per file. The first 512 bytes are the file header.
 
 |  Offset  | Size<br>(bytes) | Description |
 |  ------: | ---- | -------------------- |
-|  `0x9`   | 16   | File Signature?      |
+|  `0x9`   | 16   | File signature       |
+|  `0x1C`  | 4    | Next ending record   |
+|  `0x20`  | 4    | Last record Id       |
+|  `0x24`  | 4    | Last autoincrement value |
 |  `0x29`  | 4    | Total rows           |
 |  `0x2D`  | 2    | Row size (bytes)     |
 |  `0x2F`  | 2    | Total fields         |
-|  `0x41`  | 5?   | Last Updated?        |
+|  `0x3F`  | 8    | Last updated, IEEE-754, days since 3798/12/28 |
+|  `0x47`  | 1    | Description Length   |
+|  `0x48`  |      | Description          |
+|  `0xC1`  | 2    | User version (major) |
+|  `0xC3`  | 1    | User version (minor) |
 |  `0x200` | 768  | Start of field definitions |
-
 
 Field Definition
 ----------------
@@ -36,7 +42,7 @@ Datatypes
 | Id | Name      | Size<br>(bytes) | Description   |
 | -- | --------- | --- |----------------------- |
 | 1  | String    | Variable | Size defined in column definition at `0xA6` |
-| 2  | Date      | 4 | Days -1 since [AD 1, Jan 0](https://en.wikipedia.org/wiki/List_of_non-standard_dates#January_0) (Unverified) |
+| 2  | Date      | 4 | Days -1 since [AD 1, Jan 0](https://en.wikipedia.org/wiki/List_of_non-standard_dates#January_0) |
 | 3  | BLOB      | ? | Not yet supported. BLOBs are stored in a separate `.blb` file. The data in the `.dat` file is likely an address for the `.blb` file.  |
 | 4  | Boolean   | 1 | Missing the trailing `\x01` marker |
 | 5  | Short Int | 2 |           |
@@ -44,6 +50,7 @@ Datatypes
 | 7  | Double    | 8 | IEEE-754  |
 | 11 | Timestamp | 8 | IEEE-754, milliseconds since [AD 1, Jan 0](https://en.wikipedia.org/wiki/List_of_non-standard_dates#January_0) |
 | 5383 | Currency | 8 | IEEE-754  |
+| 7430 | Autoincrement | 4 | Int  |
 
 
 Row Definition
