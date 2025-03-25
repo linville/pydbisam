@@ -1,3 +1,7 @@
+## [1.2.1] - 2024-03-25
+### Changed
+- Fixed packaging issue that prevent the CLI from working.
+
 ## [1.2.0] - 2023-09-06
 ### Added
 - Added decoding of description, user version and last updated.
