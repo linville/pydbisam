@@ -32,8 +32,8 @@ jobs:
         twine check dist/*
 
     - name: Upload Package Artifacts
-          uses: actions/upload-artifact@v4
-          with:
-            name: Package Artifacts
-            path: dist/
-            if-no-files-found: error
+      uses: actions/upload-artifact@v4
+      with:
+        name: Package Artifacts
+        path: dist/
+        if-no-files-found: error
