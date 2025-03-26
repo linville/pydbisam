@@ -1,6 +1,6 @@
-from enum import Enum, unique
 import datetime
 import struct
+from enum import Enum, unique
 
 
 @unique
@@ -95,15 +95,12 @@ class Field:
     def row_offset(self):
         return self._row_offset
 
-    def decode_from_row(self, row_data):  # noqa: C901
+    def decode_from_row(self, row_data):
         field_data = row_data[self.row_offset : self.row_offset + self.size]
 
         # Bool doesn't have a field marking that its empty.
         if self._type is FieldType.BOOLEAN:
-            if struct.unpack("<b", field_data)[0]:
-                return True
-            else:
-                return False
+            return bool(struct.unpack("<b", field_data)[0])
 
         # All other fields include a proceeding byte that will be non-zero
         # if the field has a value and zero if it doesn't.

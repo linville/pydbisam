@@ -20,6 +20,10 @@ classifiers = [
   "Topic :: Utilities",
 ]
 
+[build-system]
+requires = ["setuptools >= 78.0"]
+build-backend = "setuptools.build_meta"
+
 [project.optional-dependencies]
 dev = [
   "black==25.1.*",
@@ -38,18 +42,17 @@ pydbisam = "pydbisam.cli:main"
 
 [tool.black]
 line-length = 88
-exclude = '''
-/(
-    \.eggs
-  | \.git
-  | \.venv
-  | build
-  | dist
-)/
-'''
 
 [tool.ruff]
 target-version = "py312"
 
 [tool.ruff.lint]
 ignore = ["E501"]
+select = [
+  "E",   # pycodestyle
+  "F",   # pyflakes
+  "UP",  # pyupgrade
+  "B",   # flake8-bugbear
+  "SIM", # flake8-simplify
+  "I",   # isort
+]

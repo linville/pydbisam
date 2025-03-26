@@ -1,12 +1,12 @@
 import binascii
 
 
-class PyDBISAM(object):
+class PyDBISAM:
     from .extract import (
-        row,
-        _read_file_header,
-        _read_field_subheader,
         _read_field_definition,
+        _read_field_subheader,
+        _read_file_header,
+        row,
     )
 
     _FIELD_INFO_OFFSET = 0x200  # Offset of first field info definition

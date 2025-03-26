@@ -1,6 +1,6 @@
-from ctypes import create_string_buffer
 import datetime
 import struct
+from ctypes import create_string_buffer
 
 from .field import Field
 
@@ -47,7 +47,7 @@ def _read_file_header(self):
     # If the difference between the calculated row area and the measured row area
     # is not evenly divisible by the row size, there is likely an issue.
     if not self._deleted_rows.is_integer():
-        raise IOError(
+        raise OSError(
             "Calculated space for deleted rows is not evenly divisible by the row size.\n"
             f"  Row Size      = {self._row_size}\n"
             f"  Meas Row Area = {self._row_area_size}\n"
@@ -66,7 +66,7 @@ def _read_file_header(self):
     # The calculated file size should always be less than or equal
     # to the measured file size (to account for deleted records).
     if calc_file_size > meas_file_size:
-        raise IOError(
+        raise OSError(
             "The actual file size is less than expected. "
             "It should be equal to or greater than calculated size.\n"
             f"Calculated = {calc_file_size} = "
@@ -81,7 +81,7 @@ def _read_field_subheader(self):
 
     self._columns = []
 
-    for field_index in range(self._total_fields):
+    for _ in range(self._total_fields):
         column = self._read_field_definition(
             self._data[offset : offset + self._FIELD_INFO_SIZE]
         )
