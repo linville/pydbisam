@@ -1,5 +1,6 @@
 import datetime
 import struct
+import sys
 from ctypes import create_string_buffer
 
 from .field import Field
@@ -24,6 +25,10 @@ def _read_file_header(self):
         self._description = desc_data.decode("cp1252", errors="replace").rstrip("\x00")
     else:
         self._description = None
+
+    # Size of the blocks in the blob file, default is 512
+    self._blob_block_size = struct.unpack_from("<I", self._data, 0x33)[0]
+    # print("blob_block_size", self._blob_block_size, file=sys.stderr)
 
     u_major = struct.unpack_from("<H", self._data, 0xC1)[0]
     u_minor = struct.unpack_from("<B", self._data, 0xC3)[0]
@@ -148,4 +153,4 @@ def row(self, index, extract_deleted=False):
     #     row_idx_b,
     # ]
 
-    return [field.decode_from_row(row_data) for field in self._columns]
+    return [field.decode_from_row(row_data, self._blob) for field in self._columns]

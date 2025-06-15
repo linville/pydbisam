@@ -16,6 +16,11 @@ PyDBISAM includes a simple CLI that can be used to dump the table structure or e
 # pydbisam --dump-csv path/to/file.dat
 ```
 
+When exporting to CSV, BLOB fields are handled specially:
+- The actual blob content is stored in a `blobs` directory
+- Only the MD5 hash of the blob content is written to the CSV
+- The blob files are named using their MD5 hashes
+
 
 Code Usage
 ----------

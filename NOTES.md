@@ -43,7 +43,7 @@ Datatypes
 | -- | --------- | --- |----------------------- |
 | 1  | String    | Variable | Size defined in column definition at `0xA6` |
 | 2  | Date      | 4 | Days -1 since [AD 1, Jan 0](https://en.wikipedia.org/wiki/List_of_non-standard_dates#January_0) |
-| 3  | BLOB      | ? | Not yet supported. BLOBs are stored in a separate `.blb` file. The data in the `.dat` file is likely an address for the `.blb` file.  |
+| 3  | BLOB      | 8 | Block index in the `.blb` file. The actual content is stored in blocks with 18-byte headers. |
 | 4  | Boolean   | 1 | Missing the trailing `\x01` marker |
 | 5  | Short Int | 2 |           |
 | 6  | Int       | 4 |           |
@@ -51,6 +51,7 @@ Datatypes
 | 11 | Timestamp | 8 | IEEE-754, milliseconds since [AD 1, Jan 0](https://en.wikipedia.org/wiki/List_of_non-standard_dates#January_0) |
 | 5383 | Currency | 8 | IEEE-754  |
 | 7430 | Autoincrement | 4 | Int  |
+| 7431 | MEMO     | 8 | Similar to BLOB, stores text content in the `.blb` file |
 
 
 Row Definition
@@ -66,3 +67,24 @@ A row in the actual data section of the database has a 26-byte row header. The m
 |  `0x9`   | 16   | Checksum (MD5?)        |
 |  `0x19`  | 2    | Trailing `\x01` marker |
 |  `0x20`  |      | Start of first field   |
+
+Blob Format
+-----------
+
+Blobs are stored in a separate `.blb` file and use a block-based structure. Each block has a header followed by content.
+
+Block Header (18 bytes):
+|  Offset  | Size<br>(bytes) | Description         |
+|  ------: | ---- | ------------------------------ |
+|  `0x0`   | 4    | Previous block index           |
+|  `0x4`   | 4    | Next block index               |
+|  `0x8`   | 2    | Length of block content        |
+|  `0xA`   | 4    | Unknown index                  |
+|  `0xE`   | 4    | Total length (on first block)  |
+
+The blocks form a linked list structure where:
+- Each block points to the next block using the next block index
+- The chain ends when next block index is 0
+- The first block (index 0) is empty
+- Content is stored after the header in each block
+- The total length field in the first block indicates the complete blob size

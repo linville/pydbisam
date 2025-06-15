@@ -1,5 +1,6 @@
 import datetime
 import struct
+import sys
 from enum import Enum, unique
 
 
@@ -16,7 +17,7 @@ class FieldType(int, Enum):
 
     STRING = (1, 0)
     DATE = (2, 4)
-    BLOB = (3, -1)
+    BLOB = (3, 8)
     BOOLEAN = (4, 1)
     SHORT_INTEGER = (5, 2)
     INTEGER = (6, 4)
@@ -25,6 +26,7 @@ class FieldType(int, Enum):
     TIMESTAMP = (11, 8)
 
     CURRENCY = (5383, 8)
+    MEMO = (5635, 8)
     AUTOINCREMET = (7430, 4)
 
     def __new__(cls, type_id, size):
@@ -95,7 +97,7 @@ class Field:
     def row_offset(self):
         return self._row_offset
 
-    def decode_from_row(self, row_data):
+    def decode_from_row(self, row_data, blob):
         field_data = row_data[self.row_offset : self.row_offset + self.size]
 
         # Bool doesn't have a field marking that its empty.
@@ -109,12 +111,19 @@ class Field:
             return None
 
         if self._type is FieldType.STRING:
-            return (
-                bytearray(field_data).decode("cp1252", errors="replace").rstrip("\x00")
-            )
+            # Read zero-terminated string
+            bytes = bytearray(field_data)
+            string_len = bytes.find(b"\x00")
+            return bytes[:string_len].decode("cp1252", errors="replace")
+
         if self._type is FieldType.BLOB:
-            # Value is likely an address within the separate blob file.
-            return None
+            (block_index, _unknown) = struct.unpack("<II", field_data)
+            content = blob.get_blob(block_index)
+            content_hash = blob.write_blob_to_content_hash(content)
+            return content_hash
+        elif self._type is FieldType.MEMO:
+            (block_index, _unknown) = struct.unpack("<II", field_data)
+            return blob.get_blob(block_index).decode("cp1252", errors="replace")
         elif self._type is FieldType.DATE:
             days = struct.unpack("<i", field_data)[0]
             if days == 0:

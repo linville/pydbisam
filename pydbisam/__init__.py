@@ -1,4 +1,7 @@
 import binascii
+import os
+import sys
+from .blob import Blob
 
 
 class PyDBISAM:
@@ -23,6 +26,7 @@ class PyDBISAM:
         self._total_rows = 0
         self._description = None
         self._user_version = None
+        self._blob = None
 
         if path:
             with open(path, mode="rb") as file:
@@ -38,6 +42,13 @@ class PyDBISAM:
 
         self._read_file_header()
         self._read_field_subheader()
+
+        blob_path = path.replace(".dat", ".blb")
+        if os.path.exists(blob_path):
+            with open(blob_path, mode="rb") as blob_file:
+                self._blob = Blob(blob_file.read(), self._blob_block_size);
+        else:
+            self._blob_bytes = b""
 
     def __enter__(self):
         return self
