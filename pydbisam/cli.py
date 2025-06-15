@@ -3,6 +3,12 @@ import argparse
 from pydbisam import PyDBISAM
 
 
+def quote_string(s):
+    if isinstance(s, str):
+        escaped = s.replace('"', '""')
+        return f'"{escaped}"'
+    return str(s)
+
 def main():
     parser = argparse.ArgumentParser(
         description="Extract data from DBISAM database tables."
@@ -25,9 +31,9 @@ def main():
 
     with PyDBISAM(args.path) as db:
         if args.dump_csv:
-            print(", ".join(db.fields()))
+            print(",".join(map(quote_string, db.fields())))
             for row in db.rows():
-                print(", ".join(map(str, row)))
+                print(",".join(map(quote_string, row)))
             exit()
 
         db.dump_structure()
