@@ -3,7 +3,7 @@ name = "pydbisam"
 version = "1.2.1"
 description = "Read DBISAM database tables."
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = "ISC"
 authors = [
   {name = "Aaron Linville", email = "aaron@linville.org"},
@@ -21,15 +21,15 @@ classifiers = [
 ]
 
 [build-system]
-requires = ["setuptools >= 78.0"]
+requires = ["setuptools >= 80.9"]
 build-backend = "setuptools.build_meta"
 
 [project.optional-dependencies]
 dev = [
-  "black==25.1.*",
-  "build==1.2.*",
-  "ruff==0.11.*",
-  "twine==6.1.*",
+  "black==25.9.*",
+  "build==1.3.*",
+  "ruff==0.14.*",
+  "twine==6.2.*",
 ]
 
 [project.urls]
@@ -44,7 +44,7 @@ pydbisam = "pydbisam.cli:main"
 line-length = 88
 
 [tool.ruff]
-target-version = "py312"
+target-version = "py314"
 
 [tool.ruff.lint]
 ignore = ["E501"]
