@@ -3,7 +3,7 @@ name = "pydbisam"
 version = "1.2.1"
 description = "Read DBISAM database tables."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 license = "ISC"
 authors = [
   {name = "Aaron Linville", email = "aaron@linville.org"},
@@ -26,10 +26,10 @@ build-backend = "setuptools.build_meta"
 
 [project.optional-dependencies]
 dev = [
-  "black==25.9.*",
-  "build==1.3.*",
-  "ruff==0.14.*",
-  "twine==6.2.*",
+  "black==26.10.*",
+  "build==1.6.*",
+  "ruff==0.17.*",
+  "twine==7.0.*",
 ]
 
 [project.urls]
