@@ -142,7 +142,7 @@ def row(self, index, extract_deleted=False):
     # Debugging output for the row header
     # return [
     #     f"{index:03}",
-    #     binascii.hexlify(row_header_data).decode().upper(),
+    #     row_data[: self._columns[0].row_offset].hex().upper(),
     #     row_idx_a,
     #     row_idx_b,
     # ]
