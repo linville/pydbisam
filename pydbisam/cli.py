@@ -10,12 +10,17 @@ import argparse
 import csv
 import sys
 
-from pydbisam import PyDBISAM
+from pydbisam import PyDBISAM, __version__
 
 
 def main():
     parser = argparse.ArgumentParser(
         description="Extract data from DBISAM database tables."
+    )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"%(prog)s {__version__}",
     )
     parser.add_argument(
         "path", metavar="path-to-dat", help="Path to DBISAM table dat file."

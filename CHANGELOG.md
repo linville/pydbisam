@@ -1,4 +1,7 @@
 ## [Unreleased]
+### Added
+- Added `--version` option to the CLI and `pydbisam.__version__`.
+
 ### Changed
 - Fields that are null in the database correctly return as `None` (rather than '' for strings, 0 for integers and 0.0 for floats).
 - `--dump-csv` now writes valid CSV using the `csv` module. Values containing commas or quotes are properly quoted, null values are written as empty cells (rather than `None`), and columns are separated by `,` (rather than `, `).

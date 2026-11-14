@@ -7,7 +7,14 @@ bytes in memory, and exposes the table's metadata, field names and rows.
 Copyright (c) 2026 Aaron Linville <aaron@linville.org>
 """
 
+from importlib.metadata import PackageNotFoundError, version
+
 from .extract import _TableReader
+
+try:
+    __version__ = version("pydbisam")
+except PackageNotFoundError:
+    __version__ = "0+unknown"
 
 
 class PyDBISAM(_TableReader):
