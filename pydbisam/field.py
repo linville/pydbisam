@@ -107,52 +107,41 @@ class Field:
         if row_data[self.row_offset - 1] == 0:
             return None
 
-        if self._type is FieldType.STRING:
-            return (
-                bytearray(field_data).decode("cp1252", errors="replace").rstrip("\x00")
-            )
-        if self._type is FieldType.BLOB:
-            # Value is likely an address within the separate blob file.
-            return None
-        elif self._type is FieldType.DATE:
-            days = struct.unpack("<i", field_data)[0]
-            if days == 0:
+        match self._type:
+            case FieldType.STRING:
+                return (
+                    bytes(field_data).decode("cp1252", errors="replace").rstrip("\x00")
+                )
+            case FieldType.BLOB:
+                # Value is likely an address within the separate blob file.
                 return None
+            case FieldType.DATE:
+                days = struct.unpack("<i", field_data)[0]
+                if days == 0:
+                    return None
 
-            return datetime.date(1, 1, 1) + datetime.timedelta(days - 1)
-        elif self._type is FieldType.SHORT_INTEGER:
-            return struct.unpack("<h", field_data)[0]
-        elif self._type is FieldType.INTEGER:
-            return struct.unpack("<i", field_data)[0]
-        elif self._type is FieldType.FLOAT:
-            return struct.unpack("<d", field_data)[0]
-        elif self._type is FieldType.TIMESTAMP:
-            milliseconds = struct.unpack("<d", field_data)[0]
+                return datetime.date.fromordinal(days)
+            case FieldType.SHORT_INTEGER:
+                return struct.unpack("<h", field_data)[0]
+            case FieldType.INTEGER:
+                return struct.unpack("<i", field_data)[0]
+            case FieldType.FLOAT | FieldType.CURRENCY:
+                return struct.unpack("<d", field_data)[0]
+            case FieldType.TIMESTAMP:
+                milliseconds = struct.unpack("<d", field_data)[0]
 
-            # Out of the box we don't support anything before AD 1.
-            # Possibly we could use Astropy, but anybody using datetimes
-            # of that scale probably aren't using DBISAM's DateTime field.
-            if milliseconds < 24 * 60 * 60 * 1000:
-                return None
+                # Out of the box we don't support anything before AD 1.
+                # Possibly we could use Astropy, but anybody using datetimes
+                # of that scale probably aren't using DBISAM's DateTime field.
+                if milliseconds < 24 * 60 * 60 * 1000:
+                    return None
 
-            ts = datetime.datetime(1, 1, 1)
-            ts += datetime.timedelta(milliseconds=milliseconds)
-            ts -= datetime.timedelta(days=1)
-
-            return ts
-        elif self._type is FieldType.CURRENCY:
-            return struct.unpack("<d", field_data)[0]
-        elif self._type is FieldType.AUTOINCREMENT:
-            return struct.unpack("<I", field_data)[0]
-        else:
-            return "Fail"
-
-
-if __name__ == "__main__":
-    print("Test out FieldType enum")
-    print(FieldType(1))
-    print(FieldType(6)._size)
-
-    print("Test out Field class")
-    x = Field(1, "Test", 8, 1, 0)
-    print(x)
+                return (
+                    datetime.datetime.min
+                    + datetime.timedelta(milliseconds=milliseconds)
+                    - datetime.timedelta(days=1)
+                )
+            case FieldType.AUTOINCREMENT:
+                return struct.unpack("<I", field_data)[0]
+            case _:
+                raise NotImplementedError(f"Decoding {self._type} is not supported.")
