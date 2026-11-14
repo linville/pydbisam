@@ -13,6 +13,11 @@ class PyDBISAM:
     _FIELD_INFO_SIZE = 768  # Size of a single field info
 
     def __init__(self, path=None, data: bytes = None):
+        if not path and not data:
+            raise ValueError("Either path or data must be provided.")
+        if path and data:
+            raise ValueError("Only one of path or data may be provided, not both.")
+
         self._path = None
         self._data_bytes = None
         self._data = None
@@ -28,11 +33,9 @@ class PyDBISAM:
             with open(path, mode="rb") as file:
                 self._path = path
                 self._data_bytes = file.read()
-        elif data:
+        else:
             self._path = "In memory"
             self._data_bytes = data
-        else:
-            return
 
         self._data = memoryview(self._data_bytes)
 
