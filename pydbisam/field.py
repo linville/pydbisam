@@ -25,7 +25,7 @@ class FieldType(int, Enum):
     TIMESTAMP = (11, 8)
 
     CURRENCY = (5383, 8)
-    AUTOINCREMET = (7430, 4)
+    AUTOINCREMENT = (7430, 4)
 
     def __new__(cls, type_id, size):
         obj = int.__new__(cls, type_id)
@@ -37,7 +37,7 @@ class FieldType(int, Enum):
         if self._size == -1:
             # raise TypeError(f"{self.__str__()} not supported.")
             return 0
-        elif self._value_ == FieldType.AUTOINCREMET:
+        elif self._value_ == FieldType.AUTOINCREMENT:
             return 4
         elif self._size and col_size:
             raise TypeError("Both innate size and col_size were provided.")
@@ -142,7 +142,7 @@ class Field:
             return ts
         elif self._type is FieldType.CURRENCY:
             return struct.unpack("<d", field_data)[0]
-        elif self._type is FieldType.AUTOINCREMET:
+        elif self._type is FieldType.AUTOINCREMENT:
             return struct.unpack("<I", field_data)[0]
         else:
             return "Fail"

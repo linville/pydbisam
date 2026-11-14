@@ -3,6 +3,7 @@
 - Fields that are null in the database correctly return as `None` (rather than '' for strings, 0 for integers and 0.0 for floats).
 - `--dump-csv` now writes valid CSV using the `csv` module. Values containing commas or quotes are properly quoted, null values are written as empty cells (rather than `None`), and columns are separated by `,` (rather than `, `).
 - `PyDBISAM()` now raises `ValueError` if neither `path` nor `data` is provided (rather than returning a partially initialized object that failed later), or if both are provided (rather than silently ignoring `data`).
+- **Breaking:** Renamed `FieldType.AUTOINCREMET` to `FieldType.AUTOINCREMENT` to fix the misspelling.
 
 ## [1.2.1] - 2024-03-25
 ### Changed
