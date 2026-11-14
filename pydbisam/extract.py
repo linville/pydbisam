@@ -1,7 +1,12 @@
 import datetime
 import struct
 
-from .field import Field
+from .field import DELPHI_EPOCH, Field
+
+# Delphi's DateDelta: days from 0001-01-01 to 1899-12-30.
+_DELPHI_DATE_DELTA = 693594
+
+_MS_PER_DAY = 24 * 60 * 60 * 1000
 
 
 class _TableReader:
@@ -22,11 +27,19 @@ class _TableReader:
         self._row_size = struct.unpack_from("<H", self._data, 0x2D)[0]
         self._total_fields = struct.unpack_from("<H", self._data, 0x2F)[0]
 
-        days = struct.unpack_from("<d", self._data, 0x3F)[0]
+        # Last updated is stored as a Delphi TDateTime minus DateDelta. Round to
+        # the nearest millisecond (TDateTime's precision) to drop the error
+        # from the floating point conversion.
+        delphi_days = struct.unpack_from("<d", self._data, 0x3F)[0] + _DELPHI_DATE_DELTA
+        ms = round(delphi_days * _MS_PER_DAY)
+        self._last_updated = DELPHI_EPOCH + datetime.timedelta(milliseconds=ms)
 
-        # Unsure the significance of this date, but this is what works...
-        epoch = datetime.datetime(3798, 12, 28)
-        self._last_updated = epoch + datetime.timedelta(days=days)
+        # Treat Delphi's zero date as no date, for consistency with DATE and
+        # TIMESTAMP fields. This is unusual: DBISAM sets this whenever the table
+        # is modified, so it would only be the zero date in a damaged or
+        # hand-crafted file.
+        if self._last_updated == DELPHI_EPOCH:
+            self._last_updated = None
 
         desc_length = self._data[0x47]
         if desc_length > 0:

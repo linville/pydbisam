@@ -2,6 +2,10 @@ import datetime
 import struct
 from enum import Enum, unique
 
+# Delphi's TDateTime counts days (with the time as a fraction) from this epoch.
+# Applications commonly store TDateTime 0 (i.e. this date) to mean "no date".
+DELPHI_EPOCH = datetime.datetime(1899, 12, 30)
+
 
 @unique
 class FieldType(int, Enum):
@@ -120,7 +124,13 @@ class Field:
                 if days == 0:
                     return None
 
-                return datetime.date.fromordinal(days)
+                date = datetime.date.fromordinal(days)
+
+                # Treat Delphi's zero date as no date.
+                if date == DELPHI_EPOCH.date():
+                    return None
+
+                return date
             case FieldType.SHORT_INTEGER:
                 return struct.unpack("<h", field_data)[0]
             case FieldType.INTEGER:
@@ -136,11 +146,18 @@ class Field:
                 if milliseconds < 24 * 60 * 60 * 1000:
                     return None
 
-                return (
+                ts = (
                     datetime.datetime.min
                     + datetime.timedelta(milliseconds=milliseconds)
                     - datetime.timedelta(days=1)
                 )
+
+                # Treat Delphi's zero date as no date. Only an exact match, since
+                # a time-only TDateTime is stored as a time on 1899-12-30.
+                if ts == DELPHI_EPOCH:
+                    return None
+
+                return ts
             case FieldType.AUTOINCREMENT:
                 return struct.unpack("<I", field_data)[0]
             case _:
