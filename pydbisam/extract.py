@@ -39,13 +39,13 @@ def _read_file_header(self):
     self._row_area_size = len(self._data) - self._data_offset
 
     # Calculate deleted rows
-    self._deleted_rows = (
-        self._row_area_size - self._calc_row_area_size
-    ) / self._row_size
+    self._deleted_rows, remainder = divmod(
+        self._row_area_size - self._calc_row_area_size, self._row_size
+    )
 
     # If the difference between the calculated row area and the measured row area
     # is not evenly divisible by the row size, there is likely an issue.
-    if not self._deleted_rows.is_integer():
+    if remainder:
         raise OSError(
             "Calculated space for deleted rows is not evenly divisible by the row size.\n"
             f"  Row Size      = {self._row_size}\n"
@@ -53,9 +53,6 @@ def _read_file_header(self):
             f"  Calc Row Area = {self._calc_row_area_size}\n"
             f"  Diff          = {self._row_area_size - self._calc_row_area_size}\n"
         )
-
-    # Force to int type so it prints nice later
-    self._deleted_rows = int(self._deleted_rows)
 
     calc_file_size = (
         self._FIELD_INFO_OFFSET + field_info_subheader_size + self._calc_row_area_size
