@@ -1,4 +1,4 @@
-## [Unreleased]
+## [2.0.0] - 2026-11-14
 ### Added
 - Added `--version` option to the CLI and `pydbisam.__version__`.
 
@@ -52,7 +52,8 @@
 ## [0.1.0] - 2021-09-06
 - Initial alpha release.
 
-[Unreleased]: https://github.com/linville/pydbisam/compare/v1.2.1...HEAD
+[Unreleased]: https://github.com/linville/pydbisam/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/linville/pydbisam/compare/v1.2.1...v2.0.0
 [1.2.1]: https://github.com/linville/pydbisam/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/linville/pydbisam/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/linville/pydbisam/compare/v1.0.2...v1.1.0
