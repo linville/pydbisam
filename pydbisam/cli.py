@@ -10,7 +10,7 @@ def main():
         description="Extract data from DBISAM database tables."
     )
     parser.add_argument(
-        "path", metavar="path-to-dat", type=str, help="Path to DBISAM table dat file."
+        "path", metavar="path-to-dat", help="Path to DBISAM table dat file."
     )
 
     group = parser.add_mutually_exclusive_group()
