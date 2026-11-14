@@ -18,7 +18,7 @@ def _read_file_header(self):
     epoch = datetime.datetime(3798, 12, 28)
     self._last_updated = epoch + datetime.timedelta(days=days)
 
-    desc_length = struct.unpack_from("<B", self._data, 0x47)[0]
+    desc_length = self._data[0x47]
     if desc_length > 0:
         desc_data = bytearray(self._data[0x48 : 0x48 + desc_length])
         self._description = desc_data.decode("cp1252", errors="replace").rstrip("\x00")
@@ -26,7 +26,7 @@ def _read_file_header(self):
         self._description = None
 
     u_major = struct.unpack_from("<H", self._data, 0xC1)[0]
-    u_minor = struct.unpack_from("<B", self._data, 0xC3)[0]
+    u_minor = self._data[0xC3]
     self._user_version = f"{u_major}.{u_minor}"
 
     field_info_subheader_size = self._total_fields * self._FIELD_INFO_SIZE
@@ -93,7 +93,7 @@ def _read_field_subheader(self):
 def _read_field_definition(self, data):
     col_index = struct.unpack_from("<H", data, 0x0)[0]
 
-    size_of_name = struct.unpack_from("<B", data, 0x2)[0]
+    size_of_name = data[0x2]
     if size_of_name > 162:
         raise RuntimeError(f"Unexpected size of name field: {size_of_name}")
     col_name_buf = struct.unpack_from(f"<{size_of_name}s", data, 0x3)[0]
@@ -127,15 +127,14 @@ def row(self, index, extract_deleted=False):
         )
 
     row_offset = self._data_offset + (index * self._row_size)
-    row_header_data = self._data[row_offset : row_offset + self._columns[0].row_offset]
     row_data = self._data[row_offset : row_offset + self._row_size]
 
-    row_deleted = struct.unpack_from("<B", row_header_data, 0x0)[0]
+    row_deleted = row_data[0x0]
 
     # Not sure the exact behavior of these indexes
-    # row_idx_a = struct.unpack_from("<B", row_header_data, 0x1)[0]
-    # row_idx_b = struct.unpack_from("<B", row_header_data, 0x5)[0]
-    # row_checksum = row_header_data[0x9 : 0x9 + 16]
+    # row_idx_a = row_data[0x1]
+    # row_idx_b = row_data[0x5]
+    # row_checksum = row_data[0x9 : 0x9 + 16]
 
     if row_deleted and not extract_deleted:
         return None

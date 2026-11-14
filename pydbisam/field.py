@@ -100,7 +100,7 @@ class Field:
 
         # Bool doesn't have a field marking that its empty.
         if self._type is FieldType.BOOLEAN:
-            return bool(struct.unpack("<b", field_data)[0])
+            return field_data[0] != 0
 
         # All other fields include a proceeding byte that will be non-zero
         # if the field has a value and zero if it doesn't.
