@@ -25,6 +25,7 @@ class FieldType(int, Enum):
     TIMESTAMP = (11, 8)
 
     CURRENCY = (5383, 8)
+    MEMO = (5635, 1)
     AUTOINCREMET = (7430, 4)
 
     def __new__(cls, type_id, size):
