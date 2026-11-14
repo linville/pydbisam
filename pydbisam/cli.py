@@ -1,4 +1,6 @@
 import argparse
+import csv
+import sys
 
 from pydbisam import PyDBISAM
 
@@ -25,12 +27,11 @@ def main():
 
     with PyDBISAM(args.path) as db:
         if args.dump_csv:
-            print(", ".join(db.fields()))
-            for row in db.rows():
-                print(", ".join(map(str, row)))
-            exit()
-
-        db.dump_structure()
+            writer = csv.writer(sys.stdout)
+            writer.writerow(db.fields())
+            writer.writerows(db.rows())
+        else:
+            db.dump_structure()
 
 
 if __name__ == "__main__":
