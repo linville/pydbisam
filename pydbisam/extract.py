@@ -1,3 +1,12 @@
+"""
+Parsing of the DBISAM table file format.
+
+Provides _TableReader, the mixin used by PyDBISAM to parse a table's file
+header, field definitions and rows.
+
+Copyright (c) 2026 Aaron Linville <aaron@linville.org>
+"""
+
 import datetime
 import struct
 

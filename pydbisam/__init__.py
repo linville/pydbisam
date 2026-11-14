@@ -1,3 +1,12 @@
+"""
+Read DBISAM database tables.
+
+Provides PyDBISAM, which opens a DBISAM table (.dat) file, from a path or from
+bytes in memory, and exposes the table's metadata, field names and rows.
+
+Copyright (c) 2026 Aaron Linville <aaron@linville.org>
+"""
+
 from .extract import _TableReader
 
 

@@ -1,3 +1,12 @@
+"""
+DBISAM field types and decoding of field values.
+
+Provides FieldType, which maps DBISAM type ids to their sizes, and Field, which
+describes a table's field and decodes its value from a row's data.
+
+Copyright (c) 2026 Aaron Linville <aaron@linville.org>
+"""
+
 import datetime
 import struct
 from enum import Enum, unique

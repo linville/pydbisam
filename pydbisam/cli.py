@@ -1,3 +1,11 @@
+"""
+Command line interface for pydbisam.
+
+Dumps a DBISAM table's structure, or exports its rows as CSV, to stdout.
+
+Copyright (c) 2026 Aaron Linville <aaron@linville.org>
+"""
+
 import argparse
 import csv
 import sys
