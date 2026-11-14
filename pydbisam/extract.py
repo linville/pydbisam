@@ -19,7 +19,7 @@ def _read_file_header(self):
 
     desc_length = self._data[0x47]
     if desc_length > 0:
-        desc_data = bytearray(self._data[0x48 : 0x48 + desc_length])
+        desc_data = bytes(self._data[0x48 : 0x48 + desc_length])
         self._description = desc_data.decode("cp1252", errors="replace").rstrip("\x00")
     else:
         self._description = None
@@ -92,7 +92,7 @@ def _read_field_definition(self, data):
     size_of_name = data[0x2]
     if size_of_name > 162:
         raise RuntimeError(f"Unexpected size of name field: {size_of_name}")
-    col_name_buf = struct.unpack_from(f"<{size_of_name}s", data, 0x3)[0]
+    col_name_buf = bytes(data[0x3 : 0x3 + size_of_name])
 
     col_type_id = struct.unpack_from("<H", data, 0xA4)[0]
 
