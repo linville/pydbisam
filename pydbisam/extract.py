@@ -119,11 +119,11 @@ def _read_field_definition(self, data):
 
 
 def row(self, index, extract_deleted=False):
-    if index < 0:
-        raise RuntimeError(f"Negative index: {index}")
-    elif index >= self.total_rows + self._deleted_rows:
-        raise RuntimeError(
-            f"Index {index} outside of bounds. Total rows: {self.total_rows}"
+    total_rows_with_deleted = self.total_rows + self._deleted_rows
+    if not 0 <= index < total_rows_with_deleted:
+        raise IndexError(
+            f"Row index {index} out of range. "
+            f"Total rows (including deleted): {total_rows_with_deleted}"
         )
 
     row_offset = self._data_offset + (index * self._row_size)

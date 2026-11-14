@@ -4,6 +4,7 @@
 - `--dump-csv` now writes valid CSV using the `csv` module. Values containing commas or quotes are properly quoted, null values are written as empty cells (rather than `None`), and columns are separated by `,` (rather than `, `).
 - `PyDBISAM()` now raises `ValueError` if neither `path` nor `data` is provided (rather than returning a partially initialized object that failed later), or if both are provided (rather than silently ignoring `data`).
 - **Breaking:** Renamed `FieldType.AUTOINCREMET` to `FieldType.AUTOINCREMENT` to fix the misspelling.
+- **Breaking:** `row()` now raises `IndexError` (rather than `RuntimeError`) for an out of range index. The error message now reports the total row count including deleted rows, which is the actual bound.
 
 ## [1.2.1] - 2024-03-25
 ### Changed
