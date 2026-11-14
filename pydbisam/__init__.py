@@ -1,6 +1,3 @@
-import binascii
-
-
 class PyDBISAM:
     from .extract import (
         _read_field_definition,
@@ -54,7 +51,7 @@ class PyDBISAM:
 
     @property
     def md5_checksum_str(self):
-        return binascii.hexlify(self._md5_checksum).decode().upper()
+        return self._md5_checksum.hex().upper()
 
     @property
     def last_updated(self):
