@@ -1,14 +1,7 @@
-class PyDBISAM:
-    from .extract import (
-        _read_field_definition,
-        _read_field_subheader,
-        _read_file_header,
-        row,
-    )
+from .extract import _TableReader
 
-    _FIELD_INFO_OFFSET = 0x200  # Offset of first field info definition
-    _FIELD_INFO_SIZE = 768  # Size of a single field info
 
+class PyDBISAM(_TableReader):
     def __init__(self, path=None, data: bytes | None = None):
         if not path and not data:
             raise ValueError("Either path or data must be provided.")
