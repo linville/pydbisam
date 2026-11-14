@@ -1,6 +1,5 @@
 import datetime
 import struct
-from ctypes import create_string_buffer
 
 from .field import Field
 
@@ -111,7 +110,7 @@ def _read_field_definition(self, data):
             f"Unexpected field index {col_index}. Expected {expected_index}."
         )
 
-    name = create_string_buffer(col_name_buf).value.decode("utf-8")
+    name = col_name_buf.split(b"\x00", 1)[0].decode("utf-8")
 
     field = Field(col_type_id, name, col_index, col_size, col_offset)
 
