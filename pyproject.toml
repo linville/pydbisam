@@ -52,6 +52,7 @@ select = [
   "A",   # built-ins
   "E",   # pycodestyle
   "F",   # pyflakes
+  "FBT", # flake8-boolean-trap
   "UP",  # pyupgrade
   "B",   # flake8-bugbear
   "SIM", # flake8-simplify

@@ -8,6 +8,7 @@
 - `PyDBISAM()` now raises `ValueError` if neither `path` nor `data` is provided (rather than returning a partially initialized object that failed later), or if both are provided (rather than silently ignoring `data`).
 - **Breaking:** Renamed `FieldType.AUTOINCREMET` to `FieldType.AUTOINCREMENT` to fix the misspelling.
 - **Breaking:** `row()` now raises `IndexError` (rather than `RuntimeError`) for an out of range index. The error message now reports the total row count including deleted rows, which is the actual bound.
+  - As part of this, `extract_deleted` is now a keyword-only argument.
 - `md5_checksum` now returns `bytes` (rather than a `memoryview` that kept the entire table's data alive).
 - DATE and TIMESTAMP fields containing Delphi's zero date (1899-12-30, often stored by applications to mean "no date") now return `None`, as does `last_updated`. A TIMESTAMP with a time on 1899-12-30 (i.e. a time-only value) is still returned.
 - `last_updated` is rounded to the nearest millisecond, removing floating point error in the microseconds (e.g. `15:29:50.866` rather than `15:29:50.865995`).

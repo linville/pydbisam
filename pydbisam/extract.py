@@ -147,7 +147,7 @@ class _TableReader:
 
         return field
 
-    def row(self, index, extract_deleted=False):
+    def row(self, index, *, extract_deleted=False):
         total_rows_with_deleted = self.total_rows + self._deleted_rows
         if not 0 <= index < total_rows_with_deleted:
             raise IndexError(
