@@ -104,8 +104,7 @@ class Field:
 
         # All other fields include a proceeding byte that will be non-zero
         # if the field has a value and zero if it doesn't.
-        is_none_data = row_data[self.row_offset - 1 : self.row_offset]
-        if not struct.unpack("<b", is_none_data):
+        if row_data[self.row_offset - 1] == 0:
             return None
 
         if self._type is FieldType.STRING:

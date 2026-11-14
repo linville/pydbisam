@@ -1,3 +1,7 @@
+## [Unreleased]]
+### Changed
+- Fields that are null in the database correctly return as `None` (rather than '' for strings, 0 for integers and 0.0 for floats).
+
 ## [1.2.1] - 2024-03-25
 ### Changed
 - Fixed packaging issue that prevent the CLI from working.
