@@ -5,6 +5,7 @@
 - `PyDBISAM()` now raises `ValueError` if neither `path` nor `data` is provided (rather than returning a partially initialized object that failed later), or if both are provided (rather than silently ignoring `data`).
 - **Breaking:** Renamed `FieldType.AUTOINCREMET` to `FieldType.AUTOINCREMENT` to fix the misspelling.
 - **Breaking:** `row()` now raises `IndexError` (rather than `RuntimeError`) for an out of range index. The error message now reports the total row count including deleted rows, which is the actual bound.
+- `md5_checksum` now returns `bytes` (rather than a `memoryview` that kept the entire table's data alive).
 
 ## [1.2.1] - 2024-03-25
 ### Changed

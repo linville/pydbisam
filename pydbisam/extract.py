@@ -6,7 +6,7 @@ from .field import Field
 
 
 def _read_file_header(self):
-    self._md5_checksum = self._data[0x9 : 0x9 + 16]
+    self._md5_checksum = bytes(self._data[0x9 : 0x9 + 16])
 
     self._total_rows = struct.unpack_from("<I", self._data, 0x29)[0]
     self._row_size = struct.unpack_from("<H", self._data, 0x2D)[0]
