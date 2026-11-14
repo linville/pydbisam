@@ -44,7 +44,7 @@ class FieldType(int, Enum):
         elif self._size and not col_size:
             return self._size
         elif self._size == 0 and col_size:
-            # Add 2 for leading \x01 and trailing \x00
+            # Add 1 for the trailing \x00
             return col_size + 1
         else:
             raise TypeError("Neither innate size nor col_size were provided.")
