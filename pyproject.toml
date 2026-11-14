@@ -49,6 +49,7 @@ target-version = "py311"
 [tool.ruff.lint]
 ignore = ["E501"]
 select = [
+  "A",   # built-ins
   "E",   # pycodestyle
   "F",   # pyflakes
   "UP",  # pyupgrade
